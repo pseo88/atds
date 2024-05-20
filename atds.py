@@ -522,5 +522,161 @@ def main():
         
     print(str(tests_passed) + "/21 tests passed on the UnorderedList class")
 
+class HashTable(object):
+    """Describes a hash table based on two lists, 'slots' and 'values', and describes putting and getting values onto that table.
+    Hash function is the mod (%) function, and collisions are handled using linear probing.
+    """
+    def __init__(self, size):
+        """Create empty lists for the Map
+        """
+        self.keys = size * [None]
+        self.data = size * [None]
+        self.size = size
+
+    def put(self, key, value):
+        """Creates an entry in the hash table
+        """
+        hash_value = key % self.size            # index for key & value
+        while self.keys[hash_value] != None and self.keys[hash_value] != key:
+            hash_value += 1
+        # We're at a position where we can place the value
+        if self.keys[hash_value] == key: 
+            self.data[hash_value] = value
+        else:
+            # begin the linear probe
+            self.keys[hash_value] = key
+            self.data[hash_value] = value
+    
+    def get(self, key):
+        hash_value = key % self.size
+        while self.keys[hash_value] != None and self.keys[hash_value] != key:
+            hash_value += 1
+        if self.keys[hash_value] == key: 
+            return self.data[hash_value]
+        else:
+            return None
+    
+    def __str__(self):
+        return "Keys:   " + str(self.keys) + "\n" + \
+               "Values: " + str(self.data)
+
+class BinaryTree:
+    def init(self, val):
+        self.val = val
+        self.left_child  = None
+        self.right_child = None
+
+    def get_root_val(self):
+        return self.val
+
+    def set_root_val(self, new_val):
+        self.val = new_val
+
+    def get_left_child(self):
+        return self.left_child
+
+    def get_right_child(self):
+        return self.right_child
+
+    def insert_left(self, val):
+        new_subtree = BinaryTree(val)
+        new_subtree.left_child = self.left_child
+        self.left_child = new_subtree
+
+    def insert_right(self, val):
+        new_subtree = BinaryTree(val)
+        new_subtree.right_child = self.right_child
+        self.right_child = new_subtree
+
+    def repr(self):
+        return "BinaryTree[key = " + str(self.val) + \
+        ",left=" + str(self.left_child) + \
+        ", right=" + str(self.right_child) + "]"
+
+def main():
+    tests_passed = 0
+    print("\nTEST: Creating HashTable(11)...")
+    try:
+        h = HashTable(11)
+        tests_passed += 1
+        print("SUCCESS. Table created.")
+    except:
+        print("FAIL. Table not created.")
+
+    print("\nTEST: Using put function to store key-value pairs in table...")
+    try:
+        h.put(1, "a")
+        h.put(6, "e")
+        h.put(9, "f")
+        h.put(12, "b")
+        h.put(23, "c")
+        tests_passed += 1
+        print("SUCCESS. .put() method called with 5 values.")
+    except:
+        print("FAIL. Problem with .put() method.")
+
+    print("\nTEST: Trying to print the current state of table:")
+    try:
+        print(h)
+        print("Should look something like:")
+        print("Keys:   [None, 1, 12, 23, None, None, 6, None, None, 9, None]")
+        print("Values: [None, 'a', 'b', 'c', None, None, 'e', None, None, 'f', None]")
+        tests_passed += 1
+    except:
+        print("FAIL. Couldn't print using __str__ or __repr__")
+        
+
+
+    print("\nTEST: Looking for original hash in table..")
+    try:
+        result = h.get(9)
+        tests_passed += 1
+        print("SUCCESS. .get() method called.")
+        if result == "f":
+            tests_passed += 1
+            print("SUCCESS. Correct value returned.")
+        else:
+            print("FAIL. Incorrect value returned.")
+    except:
+        print("FAIL. Problem with .get() method.")
+
+    print("\nTEST: Looking for collision in table..")
+    try:
+        result = h.get(23)
+        tests_passed += 1
+        print("SUCCESS. .get() method called.")
+        if result == "c":
+            tests_passed += 1
+            print("SUCCESS. Correct value returned.")
+        else:
+            print("FAIL. Incorrect value returned.")
+    except:
+        print("FAIL. Problem with .get() method.")
+
+    print("\nTEST: Looking for original hash not in table..")
+    try:
+        result = h.get(14)
+        if result == None:
+            tests_passed += 1
+            print("SUCCESS. Non-existent value not found.")
+        else:
+            print("FAIL. Non-existent value found.")
+    except:
+        print("FAIL. Problem with .get() method.")
+
+    print("\nTEST: Looking for collision not in table..")
+    try:
+        result = h.get(45)
+        if result == None:
+            tests_passed += 1
+            print("SUCCESS. Non-existent collision not found.")
+        else:
+            print("FAIL. Non-existent collision found.")
+    except:
+        print("FAIL. Problem with .get() method.")
+
+    print("\nResults:")
+    print(tests_passed,"/ 9 tests passed")
+
 if __name__ == "__main__":
     main()
